@@ -20,28 +20,7 @@ def create_table(conn, create_table_sql):
         print(e)
 
 
-# def save_data(data):
-#   conn = connect()
-#  cur = conn.cursor()
-# cur.execute('insert into USERS(data) values(%s)', (data,))
-# conn.commit()
-# conn.close()
-
-
-# def load_data(id):
-#    conn = connect()
-#    cur = conn.cursor()
-#    cur.execute('SELECT * FROM USER WHERE nombre = %s', (id,))
-#    datos = cur.fetchone()
-#    conn.close()
-#    return datos
-
-
 def main():
-    # legalJSON = json.load(open('legal.json', 'r'))
-    # usersJSON = json.load(open('users.json', ))
-    # usersdata = json.load(usersJSON)
-    # USERS
     conn = create_connection('bd.db')
     cursor = conn.cursor()
     create_emails = """create table EMAILS (id integer primary key, totals int, phishing int, cliclados int)"""
@@ -71,22 +50,35 @@ def main():
     """
     for i in range(len(webs['legal'])):
         for web in webs['legal'][i].keys():
-            cursor.execute("Insert into WEBS values (?, ?, ?, ?, ?)", (web, webs['legal'][i][web]['cookies'], webs['legal'][i][web]['aviso'], webs['legal'][i][web]['proteccion_de_datos'], webs['legal'][i][web]['creacion']))
+            cursor.execute("Insert into WEBS values (?, ?, ?, ?, ?)", (
+                web, webs['legal'][i][web]['cookies'], webs['legal'][i][web]['aviso'],
+                webs['legal'][i][web]['proteccion_de_datos'], webs['legal'][i][web]['creacion']))
             conn.commit()
     for i in range(len(users['usuarios'])):
         for user in users['usuarios'][i].keys():
-            cursor.execute("Insert into EMAILS values (?, ?, ?, ?)", (i, users['usuarios'][i][user]['emails']['total'], users['usuarios'][i][user]['emails']['phishing'], users['usuarios'][i][user]['emails']['cliclados']))
+            cursor.execute("Insert into EMAILS values (?, ?, ?, ?)", (
+                i, users['usuarios'][i][user]['emails']['total'], users['usuarios'][i][user]['emails']['phishing'],
+                users['usuarios'][i][user]['emails']['cliclados']))
             conn.commit()
-            cursor.execute("Insert into USERS values (?, ?, ?, ?, ?, ?)", (user, users['usuarios'][i][user]['telefono'], users['usuarios'][i][user]['contrasena'], users['usuarios'][i][user]['provincia'], users['usuarios'][i][user]['permisos'], i))
+            cursor.execute("Insert into USERS values (?, ?, ?, ?, ?, ?)", (
+                user, users['usuarios'][i][user]['telefono'], users['usuarios'][i][user]['contrasena'],
+                users['usuarios'][i][user]['provincia'], users['usuarios'][i][user]['permisos'], i))
             conn.commit()
             for j in range(len(users['usuarios'][i][user]['fechas'])):
-                cursor.execute("Insert into FECHAS(fecha) values (?)", (users['usuarios'][i][user]['fechas'][j],))
-                conn.commit()
-                cursor.execute("Insert into  USERSTOFECHAS(fecha_user, nombre_users) values (?, ?)", (users['usuarios'][i][user]['fechas'][j], user))
+                # Voy a comprobar primero si la fecha está ya en la base de datos
+                cursor.execute("Select fecha from FECHAS where fecha = ?", (users['usuarios'][i][user]['fechas'][j],))
+                if not cursor.fetchall():
+                    cursor.execute("Insert into FECHAS(fecha) values (?)", (users['usuarios'][i][user]['fechas'][j],))
+                    conn.commit()
+                cursor.execute("Insert into  USERSTOFECHAS(fecha_user, nombre_users) values (?, ?)",
+                               (users['usuarios'][i][user]['fechas'][j], user))
                 conn.commit()
             for j in range(len(users['usuarios'][i][user]['ips'])):
-                cursor.execute("Insert into IPS(ip) values (?)", (users['usuarios'][i][user]['ips'][j],))
-                conn.commit()
+                #Voy a comprobar si ya está guardada la IP
+                cursor.execute("Select ip from IPS where ip = ?", (users['usuarios'][i][user]['ips'][j],))
+                if not cursor.fetchall():
+                    cursor.execute("Insert into IPS(ip) values (?)", (users['usuarios'][i][user]['ips'][j],))
+                    conn.commit()
                 cursor.execute("Insert into  USERSTOIPS(ip_user, nombre_users) values (?, ?)",
                                (users['usuarios'][i][user]['ips'][j], user))
                 conn.commit()
