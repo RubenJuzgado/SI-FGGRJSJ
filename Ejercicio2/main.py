@@ -45,12 +45,18 @@ def main():
     conn = create_connection('bd.db')
     create_emails = """create table EMAILS (id integer primary key autoincrement, totals int, phising int, ciclados int)"""
     create_table(conn, create_emails)
-    create_ips = """create table IPS (id integer primary key autoincrement, ip varchar(255))"""
+    create_ips = """create table IPS (ip varchar(255) primary key )"""
     create_table(conn, create_ips)
-    create_fechas = """create table FECHAS (id integer primary key autoincrement, fecha varchar(255))"""
+    create_fechas = """create table FECHAS (fecha varchar(255) primary key )"""
     create_table(conn, create_fechas)
-    create_users = """create table USERS (nombre varchar(255) primary key, telefono int(9),contrasena varchar(255),provincia varchar(255),permisos varchar(255), emails integer, fechas integer, ips integer, FOREIGN KEY (emails) references EMAILS(id), FOREIGN KEY (fechas) references FECHAS(id), FOREIGN KEY (ips) references IPS(id))"""
+    create_users = """create table USERS (nombre varchar(255) primary key, telefono int(9),contrasena varchar(255),provincia varchar(255),permisos varchar(255), emails integer, FOREIGN KEY (emails) references EMAILS(id))"""
     create_table(conn, create_users)
+    create_userToFechas = """create table USERSTOFECHAS (fecha_user varchar(255), nombre_users varchar(255), PRIMARY KEY (nombre_users,fecha_user), FOREIGN KEY (fecha_user) references FECHAS(fecha), FOREIGN KEY (nombre_users) REFERENCES USERS(nombre))"""
+    create_table(conn, create_userToFechas)
+    create_userToIPS = """create table USERSTOIPS (ip_user varchar(255), nombre_users varchar(255), PRIMARY KEY (nombre_users,ip_user), FOREIGN KEY (ip_user) references IPS(ip), FOREIGN KEY (nombre_users) REFERENCES USERS(nombre))"""
+    create_table(conn, create_userToIPS)
+    create_legal = """create table LEGAL (nombre varchar(255) primary key, cookies int,aviso int, proteccion_de_datos int, creacion int)"""
+    create_table(conn, create_legal)
     """
     cur.execute(
         'create table USERS (nombre varchar(255) primary key, telefono int(9),contrasena varchar(255),provincia varchar(255),permisos varchar(255),emails varchar(255) FOREIGN KEY REFERENCES EMAILS, ips varchar(255))')
