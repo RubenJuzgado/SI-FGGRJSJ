@@ -44,17 +44,17 @@ def main():
     # USERS
     conn = create_connection('bd.db')
     cursor = conn.cursor()
-    create_emails = """create table EMAILS (id integer primary key autoincrement, totals int, phising int, ciclados int)"""
+    create_emails = """create table EMAILS (id integer primary key, totals int, phishing int, cliclados int)"""
     create_table(conn, create_emails)
-    create_ips = """create table IPS (ip varchar(255) primary key )"""
+    create_ips = """create table IPS (id integer primary key autoincrement, ip varchar(255) )"""
     create_table(conn, create_ips)
-    create_fechas = """create table FECHAS (fecha varchar(255) primary key )"""
+    create_fechas = """create table FECHAS (id integer primary key autoincrement, fecha varchar(255))"""
     create_table(conn, create_fechas)
-    create_users = """create table USERS (nombre varchar(255) primary key, telefono int(9),contrasena varchar(255),provincia varchar(255),permisos varchar(255), emails integer, FOREIGN KEY (emails) references EMAILS(id))"""
+    create_users = """create table USERS (nombre varchar(255) primary key, telefono int(9),contrasena varchar(255),provincia varchar(255),permisos varchar(255), emails, FOREIGN KEY (emails) references EMAILS(id))"""
     create_table(conn, create_users)
-    create_userToFechas = """create table USERSTOFECHAS (fecha_user varchar(255), nombre_users varchar(255), PRIMARY KEY (nombre_users,fecha_user), FOREIGN KEY (fecha_user) references FECHAS(fecha), FOREIGN KEY (nombre_users) REFERENCES USERS(nombre))"""
+    create_userToFechas = """create table USERSTOFECHAS (id integer primary key autoincrement, fecha_user varchar(255), nombre_users varchar(255), FOREIGN KEY (fecha_user) references FECHAS(fecha), FOREIGN KEY (nombre_users) REFERENCES USERS(nombre))"""
     create_table(conn, create_userToFechas)
-    create_userToIPS = """create table USERSTOIPS (ip_user varchar(255), nombre_users varchar(255), PRIMARY KEY (nombre_users,ip_user), FOREIGN KEY (ip_user) references IPS(ip), FOREIGN KEY (nombre_users) REFERENCES USERS(nombre))"""
+    create_userToIPS = """create table USERSTOIPS (id integer primary key autoincrement, ip_user varchar(255), nombre_users varchar(255), FOREIGN KEY (ip_user) references IPS(ip), FOREIGN KEY (nombre_users) REFERENCES USERS(nombre))"""
     create_table(conn, create_userToIPS)
     create_legal = """create table WEBS (nombre varchar(255) primary key, cookies int,aviso int, proteccion_de_datos int, creacion int)"""
     create_table(conn, create_legal)
@@ -73,21 +73,23 @@ def main():
         for web in webs['legal'][i].keys():
             cursor.execute("Insert into WEBS values (?, ?, ?, ?, ?)", (web, webs['legal'][i][web]['cookies'], webs['legal'][i][web]['aviso'], webs['legal'][i][web]['proteccion_de_datos'], webs['legal'][i][web]['creacion']))
             conn.commit()
-    
-
-    """
-    cur.execute(
-        'create table USERS (nombre varchar(255) primary key, telefono int(9),contrasena varchar(255),provincia varchar(255),permisos varchar(255),emails varchar(255) FOREIGN KEY REFERENCES EMAILS, ips varchar(255))')
-    cur.execute(
-        'create table USERSTOFECHAS (fecha_user varchar(255) FOREIGN KEY REFERENCES FECHAS,nombre_users varchar(255) FOREIGN KEY REFERENCES USERS, PRIMARY KEY (nombre_users,fecha_user))')
-    cur.execute(
-        'create table USERSTOIPS (ip_user varchar(255) FOREIGN KEY REFERENCES IPS,nombre_users varchar(255) FOREIGN KEY REFERENCES USERS, PRIMARY KEY (nombre_users,ip_user))')
-    # LEGAL
-    cur.execute(
-        'create table LEGAL (nombre varchar(255) primary key, cookies int,aviso int, proteccion_de_datos int, creacion int)')
-
-    # save_data(json.dumps(usersdata))
-    """
+    for i in range(len(users['usuarios'])):
+        for user in users['usuarios'][i].keys():
+            cursor.execute("Insert into EMAILS values (?, ?, ?, ?)", (i, users['usuarios'][i][user]['emails']['total'], users['usuarios'][i][user]['emails']['phishing'], users['usuarios'][i][user]['emails']['cliclados']))
+            conn.commit()
+            cursor.execute("Insert into USERS values (?, ?, ?, ?, ?, ?)", (user, users['usuarios'][i][user]['telefono'], users['usuarios'][i][user]['contrasena'], users['usuarios'][i][user]['provincia'], users['usuarios'][i][user]['permisos'], i))
+            conn.commit()
+            for j in range(len(users['usuarios'][i][user]['fechas'])):
+                cursor.execute("Insert into FECHAS(fecha) values (?)", (users['usuarios'][i][user]['fechas'][j],))
+                conn.commit()
+                cursor.execute("Insert into  USERSTOFECHAS(fecha_user, nombre_users) values (?, ?)", (users['usuarios'][i][user]['fechas'][j], user))
+                conn.commit()
+            for j in range(len(users['usuarios'][i][user]['ips'])):
+                cursor.execute("Insert into IPS(ip) values (?)", (users['usuarios'][i][user]['ips'][j],))
+                conn.commit()
+                cursor.execute("Insert into  USERSTOIPS(ip_user, nombre_users) values (?, ?)",
+                               (users['usuarios'][i][user]['ips'][j], user))
+                conn.commit()
 
 
 if __name__ == '__main__':
