@@ -43,6 +43,7 @@ def main():
     # usersdata = json.load(usersJSON)
     # USERS
     conn = create_connection('bd.db')
+    cursor = conn.cursor()
     create_emails = """create table EMAILS (id integer primary key autoincrement, totals int, phising int, ciclados int)"""
     create_table(conn, create_emails)
     create_ips = """create table IPS (ip varchar(255) primary key )"""
@@ -55,8 +56,25 @@ def main():
     create_table(conn, create_userToFechas)
     create_userToIPS = """create table USERSTOIPS (ip_user varchar(255), nombre_users varchar(255), PRIMARY KEY (nombre_users,ip_user), FOREIGN KEY (ip_user) references IPS(ip), FOREIGN KEY (nombre_users) REFERENCES USERS(nombre))"""
     create_table(conn, create_userToIPS)
-    create_legal = """create table LEGAL (nombre varchar(255) primary key, cookies int,aviso int, proteccion_de_datos int, creacion int)"""
+    create_legal = """create table WEBS (nombre varchar(255) primary key, cookies int,aviso int, proteccion_de_datos int, creacion int)"""
     create_table(conn, create_legal)
+
+    users = json.load(open('users.json'))
+    webs = json.load(open('legal.json'))
+
+    """for email in users['usuarios']['emails']:
+        print(email)
+
+    for user in users['usuarios']:
+        print(user)
+        cursor.execute("Insert into USERS values (?, ?, ?, ?, ?, ?, ?)", (user, user['telefono'], user['contrasena'], user['provincia'],user['permisos'], user['emails'], user))
+    """
+    for i in range(len(webs['legal'])):
+        for web in webs['legal'][i].keys():
+            cursor.execute("Insert into WEBS values (?, ?, ?, ?, ?)", (web, webs['legal'][i][web]['cookies'], webs['legal'][i][web]['aviso'], webs['legal'][i][web]['proteccion_de_datos'], webs['legal'][i][web]['creacion']))
+            conn.commit()
+    
+
     """
     cur.execute(
         'create table USERS (nombre varchar(255) primary key, telefono int(9),contrasena varchar(255),provincia varchar(255),permisos varchar(255),emails varchar(255) FOREIGN KEY REFERENCES EMAILS, ips varchar(255))')
