@@ -45,8 +45,12 @@ def main():
     conn = create_connection('bd.db')
     create_emails = """create table EMAILS (totals int primary key, phising int, ciclados int)"""
     create_table(conn, create_emails)
+    create_ips = """create table IPS (ip varchar(255) primary key)"""
+    create_table(conn, create_ips)
+    create_fechas = """create table FECHAS (fecha varchar(255) primary key)"""
+    create_table(conn, create_fechas)
     """
-    cur.execute('create table FECHAS (fecha varchar(255)  primary key)')
+    cur.execute('create table FECHAS (fecha varchar(255) primary key)')
     cur.execute('create table IPS (ip varchar(255) primary key)')
     cur.execute()
 
