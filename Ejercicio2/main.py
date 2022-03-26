@@ -89,24 +89,25 @@ def main():
     print(n_webs.count())
 
     # Media y desviacion de fechas de inicio de sesion
-    inicios_sesion = pd.read_sql("SELECT nombre_users, COUNT(fecha_user) FROM USERSTOFECHAS GROUP BY nombre_users", conn)
-    inicios_sesion = inicios_sesion.rename(columns={"COUNT(fecha_user)":"NLoggin"})
+    inicios_sesion = pd.read_sql("SELECT nombre_users, COUNT(fecha_user) FROM USERSTOFECHAS GROUP BY nombre_users",
+                                 conn)
+    inicios_sesion = inicios_sesion.rename(columns={"COUNT(fecha_user)": "NLoggin"})
     print("La media de inicios de sesión es: " + str(inicios_sesion['NLoggin'].mean()))
     print("La desviacion estandar de inicios de sesión es: " + str(inicios_sesion['NLoggin'].std()))
 
-    #Media y desviacion de ips
+    # Media y desviacion de ips
     ips = pd.read_sql("SELECT nombre_users, COUNT(ip_user) FROM USERSTOIPS GROUP BY nombre_users", conn)
     ips = ips.rename(columns={"COUNT(ip_user)": "NIPs"})
     print("La media de IPs es: " + str(ips['NIPs'].mean()))
     print("La desviacion estandar de IPs es: " + str(ips['NIPs'].std()))
 
-    #Media y desviacion de emails recibidos
+    # Media y desviacion de emails recibidos
     emails_recibidos = pd.read_sql("SELECT EMAILS.totals FROM EMAILS", conn)
     emails_recibidos = emails_recibidos.rename(columns={"totals": "NEmails"})
     print("La media de emails recibidos es: " + str(emails_recibidos['NEmails'].mean()))
     print("La desviacion estandar de emails recibidos es: " + str(emails_recibidos['NEmails'].std()))
 
-    #Minimo y maximo valor del total de fechas de inicio de sesion
+    # Minimo y maximo valor del total de fechas de inicio de sesion
     print("El numero maximo de inicios de sesion es: " + str(inicios_sesion['NLoggin'].max()))
     print("El numero minimo de inicios de sesion es: " + str(inicios_sesion['NLoggin'].min()))
 
@@ -114,6 +115,57 @@ def main():
     print("El numero maximo de emails recibidos es: " + str(emails_recibidos['NEmails'].max()))
     print("El numero minimo de emails recibidos es: " + str(emails_recibidos['NEmails'].min()))
 
+    # EJERCICIO 3
+
+    usuarios = pd.read_sql("SELECT * FROM USERS", conn)
+    correos = pd.read_sql("SELECT * FROM EMAILS", conn)
+    usuarios_correos = pd.merge(usuarios, correos, left_on='emails', right_on='id')
+    muchos_correos = pd.DataFrame.where(usuarios_correos, usuarios_correos['totals'] >= 200)
+    pocos_correos = pd.DataFrame.where(usuarios_correos, usuarios_correos['totals'] < 200)
+    privilegiados = pd.DataFrame.where(usuarios_correos, usuarios_correos['permisos'] == '1')
+    no_privilegiados = pd.DataFrame.where(usuarios_correos, usuarios_correos['permisos'] == '0')
+
+    # Numero de observaciones
+    print("Numero de observaciones de usuarios con menos de 200 correos: " + str(pocos_correos['phishing'].count()))
+    print("Numero de observaciones de usuarios con 200 correos o más: " + str(muchos_correos['phishing'].count()))
+    print("Numero de observaciones de usuarios no privilegiados: " + str(no_privilegiados['phishing'].count()))
+    print("Numero de observaciones de usuarios administradores: " + str(privilegiados['phishing'].count()))
+
+    # Numero de missing
+    print("Numero de missing de usuarios con menos de 200 correos: " + str(pocos_correos['phishing'].isnull().sum()))
+    print("Numero de missing de usuarios con 200 correos o más: " + str(muchos_correos['phishing'].isnull().sum()))
+    print("Numero de missing de usuarios no privilegiados: " + str(no_privilegiados['phishing'].isnull().sum()))
+    print("Numero de missing de usuarios administradores: " + str(privilegiados['phishing'].isnull().sum()))
+
+    # Media
+    print("Media correos phishing de usuarios con menos de 200 correos: " + str(pocos_correos['phishing'].mean()))
+    print("Media correos phishing de usuarios con 200 correos o más: " + str(muchos_correos['phishing'].mean()))
+    print("Media correos phishing de usuarios no privilegiados: " + str(no_privilegiados['phishing'].mean()))
+    print("Media correos phishing de usuarios administradores: " + str(privilegiados['phishing'].mean()))
+
+    # Mediana
+    print("Mediana correos phishing de usuarios con menos de 200 correos: " + str(pocos_correos['phishing'].median()))
+    print("Mediana correos phishing de usuarios con 200 correos o más: " + str(muchos_correos['phishing'].median()))
+    print("Mediana correos phishing de usuarios no privilegiados: " + str(no_privilegiados['phishing'].median()))
+    print("Mediana correos phishing de usuarios administradores: " + str(privilegiados['phishing'].median()))
+
+    # Varianza
+    print("Varianza correos phishing de usuarios con menos de 200 correos: " + str(pocos_correos['phishing'].var()))
+    print("Varianza correos phishing de usuarios con 200 correos o más: " + str(muchos_correos['phishing'].var()))
+    print("Varianza correos phishing de usuarios no privilegiados: " + str(no_privilegiados['phishing'].var()))
+    print("Varianza correos phishing de usuarios administradores: " + str(privilegiados['phishing'].var()))
+
+    # Minimo
+    print("Minimo correos phishing de usuarios con menos de 200 correos: " + str(pocos_correos['phishing'].min()))
+    print("Minimo correos phishing de usuarios con 200 correos o más: " + str(muchos_correos['phishing'].min()))
+    print("Minimo correos phishing de usuarios no privilegiados: " + str(no_privilegiados['phishing'].min()))
+    print("Minimo correos phishing de usuarios administradores: " + str(privilegiados['phishing'].min()))
+
+    # Maximo
+    print("Maximo correos phishing de usuarios con menos de 200 correos: " + str(pocos_correos['phishing'].max()))
+    print("Maximo correos phishing de usuarios con 200 correos o más: " + str(muchos_correos['phishing'].max()))
+    print("Maximo correos phishing de usuarios no privilegiados: " + str(no_privilegiados['phishing'].max()))
+    print("Maximo correos phishing de usuarios administradores: " + str(privilegiados['phishing'].max()))
 
 if __name__ == '__main__':
     main()
