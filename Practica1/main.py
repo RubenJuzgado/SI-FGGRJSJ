@@ -66,14 +66,15 @@ def insertar_datos(conn):
 
 
 def create_hash(word):
-        pass_bytes = word.encode('utf-8')
-        pass_hash = md5(pass_bytes)
-        digest = pass_hash.hexdigest()
-        return digest
+    pass_bytes = word.encode('utf-8')
+    pass_hash = md5(pass_bytes)
+    digest = pass_hash.hexdigest()
+    return digest
+
 
 def main():
     conn = create_connection('bd.db')
-
+    dictionary = pd.read_csv("diccionario.csv", names=['passwords'])
     # create_emails = """create table EMAILS (id integer primary key, totals int, phishing int, cliclados int)"""
     # create_table(conn, create_emails)
     # create_ips = """create table IPS (id integer primary key autoincrement, ip varchar(255) )"""
@@ -93,9 +94,7 @@ def main():
     # Numero muestras
 
     n_users = pd.read_sql("SELECT USERS.nombre FROM USERS", conn)
-    print(n_users.count())
     n_webs = pd.read_sql("SELECT WEBS.nombre FROM WEBS", conn)
-    print(n_webs.count())
 
     # Media y desviacion de fechas de inicio de sesion
     inicios_sesion = pd.read_sql("SELECT nombre_users, COUNT(fecha_user) FROM USERSTOFECHAS GROUP BY nombre_users",
@@ -176,17 +175,15 @@ def main():
     print("Maximo correos phishing de usuarios administradores: " + str(privilegiados['phishing'].max()))
 
     # Ejercicio 4
-    #Apartado1
+    # Apartado 1
     porcentajes_clickados = pd.DataFrame()
     porcentajes_clickados['porcentaje'] = (usuarios_correos['cliclados'] * 100) / usuarios_correos['totals']
     porcentajes_clickados['nombreu'] = usuarios_correos['nombre']
-    print(porcentajes_clickados)
     porcentajes_clickados = porcentajes_clickados.sort_values(by='porcentaje', ascending=False)
-    print(porcentajes_clickados.head(10))
-    porcentajes_clickadosv2=porcentajes_clickados
+    porcentajes_clickadosv2 = porcentajes_clickados
     porcentajes_clickados = porcentajes_clickados.head(10)
 
-
+    # Apartado 2
     paginas_desactualizadas = pd.DataFrame()
     paginas = pd.read_sql("SELECT * FROM WEBS", conn)
     paginas_desactualizadas = paginas
@@ -195,7 +192,6 @@ def main():
     paginas_desactualizadas = paginas_desactualizadas.sort_values(by='total', ascending=False)
     paginas_desactualizadas = paginas_desactualizadas.tail(5)
     paginas_desactualizadas = paginas_desactualizadas.sort_values(by='creacion')
-    print(paginas_desactualizadas)
     fig, ax = plt.subplots(1, 1, figsize=(10, 8))
     label = paginas_desactualizadas["nombre"]
     x = np.arange(len(label))
@@ -214,12 +210,7 @@ def main():
     plt.subplots_adjust(bottom=0.4, right=0.6)
     plt.savefig("desactplot.png", dpi=150)
 
-    ####
-    # usuarios_conexiones = pd.DataFrame()
-    # usuarios_conexiones['nombreuser'] = pd.read_sql("SELECT nombre_users, ip_user FROM USERSTOIPS GROUP BY (nombre_users)", conn)
-    ######hay  hacerlo
-
-    #########
+    # Apartado 4
     paginasAct = paginas
     paginasAct['total'] = paginasAct['cookies'] + paginasAct['aviso'] + paginasAct['proteccion_de_datos']
     paginasDes = paginasAct
@@ -243,9 +234,7 @@ def main():
 
     #######
 
-    dictionary = pd.read_csv("diccionario.csv", names=['passwords'])
-
-    # match all words from the dictionary until it matches/ends
+    # Checkpasswords
     usuario_contrasena = pd.DataFrame()
     usuario_contrasena['nombre'] = usuarios['nombre']
     usuario_contrasena['contrasena'] = usuarios['contrasena']
@@ -254,11 +243,8 @@ def main():
     usuario_contrasena = usuario_contrasena.assign(contrasenabien=1)
     inicios_sesion = inicios_sesion.assign(contrasenabien=1)
     for i in range(usuario_contrasena.shape[0]):
-        print(i)
         hashh = usuario_contrasena.at[i, 'contrasena']
-        print("siuu " + str(hashh) + "    #########################")
         for test_word in dictionary["passwords"]:
-            print(str(create_hash(test_word)))
             crackeada = 0
             if str(create_hash(test_word)) == str(hashh):
                 print("Found Matched Password:" + str(test_word) + "for user" + str(usuario_contrasena.at[i, 'nombre']))
@@ -269,14 +255,14 @@ def main():
 
     usuario_contrasena_mal = usuario_contrasena.loc[(usuario_contrasena['contrasenabien'] == 0)]
     usuario_contrasena_bien = usuario_contrasena.loc[(usuario_contrasena['contrasenabien'] == 1)]
-    plt.savefig("pieconplot.png", dpi=150)
 
+    # Apartado 5
     # PIE CHART EXTRA
     labels = 'No comprometidas', 'Comprometidas'
     sizes = [usuario_contrasena_bien.shape[0], usuario_contrasena_mal.shape[0]]
     plt.figure(figsize=(5, 5))
     plt.pie(sizes, labels=labels, autopct='%.2f%%', shadow=True)
-    plt.savefig("numpassbienplot.png", dpi=150)
+    plt.savefig("piepassbienplot.png", dpi=150)
 
     # BARRAS PLOT
 
@@ -289,12 +275,9 @@ def main():
     plt.ylim(ymin * scale_factor, ymax * scale_factor)
     plt.show()
     # Apartado 3
-    print(inicios_sesion)
     inicios_sesion_mal = inicios_sesion.loc[(inicios_sesion['contrasenabien'] == 0)]
     inicios_sesion_bien = inicios_sesion.loc[(inicios_sesion['contrasenabien'] == 1)]
-    print("La media de Conexiones en usuarios con contrasenas vulnerables es: " + str(inicios_sesion_mal['NLoggin'].mean()))
-    print("La media de Conexiones en usuarios con contrasenas no vulnerables es: " + str(inicios_sesion_bien['NLoggin'].mean()))
-    ejey=(inicios_sesion_mal['NLoggin'].mean(),inicios_sesion_bien['NLoggin'].mean())
+    ejey = (inicios_sesion_mal['NLoggin'].mean(), inicios_sesion_bien['NLoggin'].mean())
     mediamal = inicios_sesion_mal['NLoggin'].mean()
     mediabien = inicios_sesion_bien['NLoggin'].mean()
     mediascondata = {'media': [mediamal, mediabien]}
@@ -303,10 +286,11 @@ def main():
     mediasconplot = mediascon.plot(x='nombre', y='media', kind='bar')
     plt.subplots_adjust(bottom=0.3)
     plt.show()
+    # Apartado 1
 
     apartado1 = pd.merge(porcentajes_clickadosv2, usuario_contrasena, left_on='nombreu', right_on='nombre')
-    apartado1 = apartado1.where(apartado1['contrasenabien']==0)
-    apartado1= apartado1.dropna()
+    apartado1 = apartado1.where(apartado1['contrasenabien'] == 0)
+    apartado1 = apartado1.dropna()
     porcentajes_clickados = porcentajes_clickados.head(10)
     porplot = porcentajes_clickados.plot(x='nombreu', y='porcentaje', kind='bar')
     plt.subplots_adjust(bottom=0.26)

@@ -5,9 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2c948e98-b6ad-4d58-9130-9d6b3475a419" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/porACTplot.png" beforeDir="false" afterPath="$PROJECT_DIR$/porACTplot.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/porplot.png" beforeDir="false" afterPath="$PROJECT_DIR$/porplot.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Practica1/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Practica1/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,7 +31,7 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="26s8SsvhNfWUtMrvf856AuWcFol" />
-  <component name="ProjectLevelVcsManager">
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
   <component name="ProjectViewState">
@@ -121,7 +120,8 @@
       <workItem from="1648395285846" duration="310000" />
       <workItem from="1648395617508" duration="204000" />
       <workItem from="1648395940697" duration="15006000" />
-      <workItem from="1648455068987" duration="11931000" />
+      <workItem from="1648455068987" duration="11971000" />
+      <workItem from="1648494009337" duration="2008000" />
     </task>
     <servers />
   </component>
@@ -144,6 +144,6 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Ejercicio2$main.coverage" NAME="main Coverage Results" MODIFIED="1648455503302" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Ejercicio2$main__1_.coverage" NAME="main (1) Coverage Results" MODIFIED="1648466962149" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../Practica1" />
+    <SUITE FILE_PATH="coverage/Ejercicio2$main__1_.coverage" NAME="main (1) Coverage Results" MODIFIED="1648496017864" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../Practica1" />
   </component>
 </project>
