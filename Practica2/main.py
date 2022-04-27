@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import render_template
 from flask import request
+from dataframes import usuariosCriticos
 
 import json
 import plotly.graph_objects as go
@@ -15,7 +16,11 @@ def indice():
 
 @app.route('/tablas')
 def tablas():
-    return render_template("tablas.html")
+    import plotly
+    df = usuariosCriticos(10)
+    a = plotly.utils.PlotlyJSONEncoder
+    graphJSON = json.dumps(df, cls=a)
+    return render_template("tablas.html", graphJSON=graphJSON)
 
 
 @app.route('/plotly')
@@ -33,3 +38,5 @@ def plotly():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+

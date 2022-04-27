@@ -5,6 +5,14 @@
     <title>Title</title>
 </head>
 <body>
+{% if graphJSON %}
+  <div id='chart' class='chart'”></div>
+    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+    <script type='text/javascript'>
+      var graphs = {{ graphJSON }};
+      Plotly.plot('chart',graphs,{});
+    </script>
+{% endif %}
 
 </body>
 </html>
