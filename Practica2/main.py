@@ -9,20 +9,13 @@ app = Flask(__name__)
 
 
 @app.route('/')
-def hello_world():
-    return '<p>Hello, World!</p>'
+def indice():
+    return render_template("index.html")
 
 
-@app.route('/hello/')
-@app.route('/hello/<name>')
-def hello(name=None):
-    return render_template('hello.html', name=name, graphJSON=None)
-
-
-@app.route('/login')
-def login():
-    name = request.args.get('user')
-    return render_template('hello.html', name=name, graphJSON=None)
+@app.route('/tablas')
+def tablas():
+    return render_template("tablas.html")
 
 
 @app.route('/plotly')
