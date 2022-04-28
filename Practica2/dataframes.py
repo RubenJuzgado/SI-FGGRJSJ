@@ -108,8 +108,20 @@ def usuariosCriticos():
     apartado1 = pd.merge(porcentajes_clickados, usuario_contrasena, left_on='nombreu', right_on='nombre')
     apartado1 = apartado1.where(apartado1['contrasenabien'] == 0)
     apartado1 = apartado1.dropna()
+    conn.close()
 
     return apartado1
+
+def websCriticas():
+    conn = create_connection('bd.db')
+    paginas_desactualizadas = pd.DataFrame()
+    paginas = pd.read_sql("SELECT * FROM WEBS", conn)
+    paginas_desactualizadas = paginas
+    paginas_desactualizadas['total'] = paginas_desactualizadas['cookies'] + paginas_desactualizadas['aviso'] + \
+                                       paginas_desactualizadas['proteccion_de_datos']
+    paginas_desactualizadas = paginas_desactualizadas.sort_values(by='total', ascending=False)
+    conn.close()
+    return paginas_desactualizadas
 
 
 def main():

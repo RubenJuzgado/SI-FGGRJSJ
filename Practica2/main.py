@@ -2,9 +2,11 @@ from flask import Flask
 from flask import render_template
 from flask import request
 from dataframes import usuariosCriticos
+from dataframes import websCriticas
 import json
 import plotly.graph_objects as go
 import matplotlib.pyplot as plt
+
 app = Flask(__name__)
 
 
@@ -13,19 +15,38 @@ def indice():
     return render_template("index.html")
 
 
-@app.route('/tablas')
+@app.route("/formApartado2")
 def tablas():
-    df = usuariosCriticos()
-    trace = go.Bar(x=df['nombreu'][0:10], y=df['porcentaje'])
-    layout = go.Layout(title="Usuarios mas críticos", xaxis=dict(title="Usuarios con contraseña vulnerable"),
-                       yaxis=dict(title="Porcentaje clicks emails"))
-    data = [trace]
-    fig = go.Figure(data=data, layout=layout)
+    return render_template("formApartado2.html")
+
+
+@app.route("/graficosApartado2", methods=["GET", "POST"])
+def criticalUsers():
     import plotly
     a = plotly.utils.PlotlyJSONEncoder
+    graphJSONU = None
+    graphJSONW = None
+    if request.form['numU'] != "0":
+        df = usuariosCriticos()
+        numeroU = int(request.form['numU'])
+        traceU = go.Bar(x=df['nombreu'][0:numeroU], y=df['porcentaje'])
+        layoutU = go.Layout(title="Usuarios mas críticos", xaxis=dict(title="Usuarios con contraseña vulnerable"),
+                       yaxis=dict(title="Porcentaje clicks emails"))
+        dataU = [traceU]
+        figU = go.Figure(data=dataU, layout=layoutU)
 
-    graphJSON = json.dumps(fig, cls=a)
-    return render_template("tablas.html", graphJSON=graphJSON)
+        graphJSONU = json.dumps(figU, cls=a)
+    if request.form['numW'] != 0:
+        dfW = websCriticas()
+        numeroW = int(request.form['numW'])
+        traceW = go.Bar(x=dfW['nombre'][0:numeroW])
+        layoutW = go.Layout(title="Webs mas vulnerables", xaxis=dict(title="Webs"),
+                            yaxis=dict(title="Total desactualizadas"))
+        dataW = [traceW]
+        figW = go.Figure(data=dataW, layout=layoutW)
+
+        graphJSONW = json.dumps(figW, cls=a)
+    return render_template("graficosApartado2.html", graphJSONU=graphJSONU, graphJSONW=graphJSONW)
 
 
 @app.route('/plotly')
@@ -43,5 +64,3 @@ def plotly():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-

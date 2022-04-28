@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Usuarios Criticos</title>
+</head>
+<body>
+{% if graphJSONU %}
+  <div id='chart' class='chart'”></div>
+    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+    <script type='text/javascript'>
+      var graphs = {{graphJSONU | safe}};
+      Plotly.plot('chart',graphs,{});
+    </script>
+{% endif %}
+{% if graphJSONW %}
+  <div id='chart2' class='chart'”></div>
+    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+    <script type='text/javascript'>
+      var graphs2 = {{graphJSONW | safe}};
+      Plotly.plot('chart2',graphs2,{});
+    </script>
+{% endif %}
+</body>
+</html>
