@@ -24,11 +24,10 @@ def tablas():
 def criticalUsers():
     import plotly
     a = plotly.utils.PlotlyJSONEncoder
-    graphJSONU = None
-    graphJSONW = None
-    if request.form['numU'] != "0":
+    numeroU = int(request.form['numU'])
+    numeroW = int(request.form['numW'])
+    if numeroU != 0:
         df = usuariosCriticos()
-        numeroU = int(request.form['numU'])
         traceU = go.Bar(x=df['nombreu'][0:numeroU], y=df['porcentaje'])
         layoutU = go.Layout(title="Usuarios más críticos", xaxis=dict(title="Usuarios con contraseña vulnerable"),
                        yaxis=dict(title="Porcentaje clicks emails"))
@@ -36,9 +35,8 @@ def criticalUsers():
         figU = go.Figure(data=dataU, layout=layoutU)
 
         graphJSONU = json.dumps(figU, cls=a)
-    if request.form['numW'] != 0:
+    if request.form['numW'] != "0":
         dfW = websCriticas()
-        numeroW = int(request.form['numW'])
         traceW = go.Bar(x=dfW['nombre'][0:numeroW], y=dfW['total'])
         layoutW = go.Layout(title="Webs más vulnerables", xaxis=dict(title="Webs"),
                             yaxis=dict(title="Total desactualizadas"))
@@ -46,7 +44,12 @@ def criticalUsers():
         figW = go.Figure(data=dataW, layout=layoutW)
 
         graphJSONW = json.dumps(figW, cls=a)
-    return render_template("graficosApartado2.html", graphJSONU=graphJSONU, graphJSONW=graphJSONW)
+    if numeroU != 0 and numeroW != 0:
+        return render_template("graficosApartado2.html", graphJSONU=graphJSONU, graphJSONW=graphJSONW)
+    elif numeroU != 0:
+        return render_template("graficosApartado2.html", graphJSONU=graphJSONU)
+    else:
+        return render_template("graficosApartado2.html", graphJSONW=graphJSONW)
 
 
 @app.route('/plotly')
