@@ -2,10 +2,9 @@ from flask import Flask
 from flask import render_template
 from flask import request
 from dataframes import usuariosCriticos
-
 import json
 import plotly.graph_objects as go
-
+import matplotlib.pyplot as plt
 app = Flask(__name__)
 
 
@@ -16,10 +15,16 @@ def indice():
 
 @app.route('/tablas')
 def tablas():
+    df = usuariosCriticos()
+    trace = go.Bar(x=df['nombreu'][0:10], y=df['porcentaje'])
+    layout = go.Layout(title="Usuarios mas críticos", xaxis=dict(title="Usuarios con contraseña vulnerable"),
+                       yaxis=dict(title="Porcentaje clicks emails"))
+    data = [trace]
+    fig = go.Figure(data=data, layout=layout)
     import plotly
-    df = usuariosCriticos(10)
     a = plotly.utils.PlotlyJSONEncoder
-    graphJSON = json.dumps(df, cls=a)
+
+    graphJSON = json.dumps(fig, cls=a)
     return render_template("tablas.html", graphJSON=graphJSON)
 
 

@@ -72,7 +72,7 @@ def create_hash(word):
     return digest
 
 
-def usuariosCriticos(number):
+def usuariosCriticos():
     conn = create_connection('bd.db')
     dictionary = pd.read_csv("diccionario.csv", names=['passwords'])
     usuarios = pd.read_sql("SELECT * FROM USERS", conn)
@@ -108,7 +108,7 @@ def usuariosCriticos(number):
     apartado1 = pd.merge(porcentajes_clickados, usuario_contrasena, left_on='nombreu', right_on='nombre')
     apartado1 = apartado1.where(apartado1['contrasenabien'] == 0)
     apartado1 = apartado1.dropna()
-    apartado1 = apartado1.head(number)
+
     return apartado1
 
 
