@@ -30,7 +30,7 @@ def criticalUsers():
         df = usuariosCriticos()
         numeroU = int(request.form['numU'])
         traceU = go.Bar(x=df['nombreu'][0:numeroU], y=df['porcentaje'])
-        layoutU = go.Layout(title="Usuarios mas críticos", xaxis=dict(title="Usuarios con contraseña vulnerable"),
+        layoutU = go.Layout(title="Usuarios más críticos", xaxis=dict(title="Usuarios con contraseña vulnerable"),
                        yaxis=dict(title="Porcentaje clicks emails"))
         dataU = [traceU]
         figU = go.Figure(data=dataU, layout=layoutU)
@@ -39,8 +39,8 @@ def criticalUsers():
     if request.form['numW'] != 0:
         dfW = websCriticas()
         numeroW = int(request.form['numW'])
-        traceW = go.Bar(x=dfW['nombre'][0:numeroW])
-        layoutW = go.Layout(title="Webs mas vulnerables", xaxis=dict(title="Webs"),
+        traceW = go.Bar(x=dfW['nombre'][0:numeroW], y=dfW['total'])
+        layoutW = go.Layout(title="Webs más vulnerables", xaxis=dict(title="Webs"),
                             yaxis=dict(title="Total desactualizadas"))
         dataW = [traceW]
         figW = go.Figure(data=dataW, layout=layoutW)
