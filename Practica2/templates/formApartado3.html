@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="/graficosApartado3" method="post">
+    <p>
+        Introduce el numero de usuarios que quieres mostrar:
+        <input type="number" name="numU" id="numU" min="0" value="0" required>
+    </p>
+    <input type="submit" value="Mostrar Graficos">
+    <p>
+        ¿Desea mostrar información adicional de los usuarios?<br>
+        <input type="radio" id="seleccion" name="seleccion" value="mas50" required>
+        <label for="mas50">Correos de spam pulsados, más del 50%</label><br>
+        <input type="radio" id="seleccion" name="seleccion" value="menos50" required>
+        <label for="menos50">Correos de spam pulsados, 50% o menos</label><br>
+        <input type="radio" id="seleccion" name="seleccion" value="ninguno" required>
+        <label for="ninguno">Ninguno</label><br>
+    </p>
+</form>
+</body>
+</html>

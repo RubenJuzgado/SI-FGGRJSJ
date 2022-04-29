@@ -123,6 +123,31 @@ def websCriticas():
     conn.close()
     return paginas_desactualizadas
 
+def mas50Clickados():
+    conn = create_connection('bd.db')
+    usuarios = pd.read_sql("SELECT * FROM USERS", conn)
+    correos = pd.read_sql("SELECT * FROM EMAILS", conn)
+    usuarios_correos = pd.merge(usuarios, correos, left_on='emails', right_on='id')
+    usuarios_correos['porcentajeSpamClick'] = usuarios_correos['cliclados'] * 100 / usuarios_correos['phishing']
+    usuarios_mas50 = usuarios_correos.where(usuarios_correos['porcentajeSpamClick'] > 50)
+    usuarios_mas50 = usuarios_mas50.dropna()
+    usuarios_mas50 = usuarios_mas50.sort_values(by='porcentajeSpamClick', ascending=False)
+
+    return usuarios_mas50
+
+
+def menos50Clickados():
+    conn = create_connection('bd.db')
+    usuarios = pd.read_sql("SELECT * FROM USERS", conn)
+    correos = pd.read_sql("SELECT * FROM EMAILS", conn)
+    usuarios_correos = pd.merge(usuarios, correos, left_on='emails', right_on='id')
+    usuarios_correos['porcentajeSpamClick'] = usuarios_correos['cliclados'] * 100 / usuarios_correos['phishing']
+    usuarios_menos50 = usuarios_correos.where(usuarios_correos['porcentajeSpamClick'] <= 50)
+    usuarios_menos50 = usuarios_menos50.dropna()
+    usuarios_menos50 = usuarios_menos50.sort_values(by='porcentajeSpamClick', ascending=False)
+    return usuarios_menos50
+
+
 
 def main():
     conn = create_connection('bd.db')

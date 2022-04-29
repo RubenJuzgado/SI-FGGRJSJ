@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% if graphJSONU %}
+  <div id='chart' class='chart'”></div>
+    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+    <script type='text/javascript'>
+      var graphs = {{graphJSONU | safe}};
+      Plotly.plot('chart',graphs,{});
+    </script>
+{% endif %}
+{% if seleccionJSON %}
+  <div id='chart2' class='chart'”></div>
+    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+    <script type='text/javascript'>
+      var graphs = {{seleccionJSON | safe}};
+      Plotly.plot('chart2',graphs,{});
+    </script>
+{% endif %}
+</body>
+</html>
