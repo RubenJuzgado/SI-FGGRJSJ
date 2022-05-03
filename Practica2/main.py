@@ -1,3 +1,5 @@
+import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 from flask import Flask
 from flask import render_template
@@ -6,6 +8,8 @@ from dataframes import usuariosCriticos
 from dataframes import websCriticas
 from dataframes import mas50Clickados
 from dataframes import menos50Clickados
+from sklearn import datasets, linear_model
+from sklearn.metrics import mean_squared_error, r2_score
 import json
 import plotly.graph_objects as go
 
@@ -123,7 +127,91 @@ def graficosApartado3():
 @app.route("/tenLastCVE")
 def tenLastCVE():
     df = devolverLast10CVE()
-    return render_template('tenLastCVE.html',  tables=[df.to_html(classes='data', header="true")])
+    return render_template('tenLastCVE.html', tables=[df.to_html(classes='data', header="true")])
+
+
+@app.route("/regresionLineal")
+def regresionLineal():
+    with open('static/users_IA_clases.json') as json_file:
+        usersClasesDatos = json.load(json_file)
+    usersClasesDatos = usersClasesDatos['usuarios']
+
+    with open('static/users_IA_predecir.json') as json_file:
+        usersPredecirDatos = json.load(json_file)
+    usersPredecirDatos = usersPredecirDatos['usuarios']
+
+    usersClasesTrain = []
+    usersClasesTest = []
+    usersPredecirTrain = []
+    usersPredecirTest = []
+    vulnerableTrain = []
+    vulnerableTest = []
+    for i in range(int((len(usersClasesDatos) * 0.8))):
+        vulnerableTrain.append(usersClasesDatos[i]['vulnerable'])
+
+        usersClasesTrain.append(
+            [usersClasesDatos[i]['emails_phishing_recibidos'], usersClasesDatos[i]['emails_phishing_clicados']])
+
+    for i in range(int((len(usersClasesDatos) * 0.8)), len(usersClasesDatos)):
+        vulnerableTest.append(usersClasesDatos[i]['vulnerable'])
+        usersClasesTest.append(
+            [usersClasesDatos[i]['emails_phishing_recibidos'], usersClasesDatos[i]['emails_phishing_clicados']])
+
+    for i in range(int((len(usersPredecirDatos) * 0.8))):
+        usersPredecirTrain.append(
+            [usersPredecirDatos[i]['emails_phishing_recibidos'], usersPredecirDatos[i]['emails_phishing_clicados']])
+
+    for i in range(int((len(usersPredecirDatos) * 0.8)), len(usersPredecirDatos)):
+        usersPredecirTest.append(
+            [usersPredecirDatos[i]['emails_phishing_recibidos'], usersPredecirDatos[i]['emails_phishing_clicados']])
+
+
+    print("UsersClasesTrain:")
+    print(usersClasesTrain)
+    print("UsersPredecirTrain:")
+    print(usersPredecirTrain)
+
+    regr = linear_model.LinearRegression()
+    regr.fit(usersClasesTrain, usersPredecirTrain)
+    print("Regr.coef_:")
+    print(regr.coef_)
+    usersPredecir_pred = regr.predict(usersClasesTest)
+    porcentajeClickados = []
+    porcentajeClickadosv2 = []
+    coefDeter = r2_score(usersPredecirTest, usersPredecir_pred)
+    print(usersClasesTrain)
+    for i in range(len(usersClasesTrain)):
+        if usersClasesTrain[i][0] != 0:
+            data = float(usersClasesTrain[i][1]/usersClasesTrain[i][0])
+            data2 = float(data*coefDeter)
+            porcentajeClickados.append(data)
+            porcentajeClickadosv2.append(data2)
+        else:
+            porcentajeClickados.append(0)
+
+
+    print("PorcentajeClickadosv2:")
+    print(porcentajeClickadosv2)
+
+    print("PorcentajeClickados")
+    print(porcentajeClickados)
+
+    print("regr.intercept")
+    print(regr.intercept_)
+
+    plt.plot(porcentajeClickadosv2 + regr.intercept_, porcentajeClickados)
+    plt.show()
+    return render_template("index.html")
+
+
+@app.route("/decisionTree")
+def decisionTree():
+    return
+
+
+@app.route("/randomForest")
+def randomForest():
+    return
 
 
 @app.route('/plotly')
