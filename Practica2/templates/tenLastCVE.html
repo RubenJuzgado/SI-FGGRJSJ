@@ -1,13 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <style type="text/css">
+        th{
+            text-align: center;
+        }
+    </style>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>10 </title>
 </head>
 <body>
-{% for table in tables %}
-            {{titles[loop.index]}}
+<section>
+    <div>
+    <h1>10 Last CVE</h1>
+    {% for table in tables %}
             {{ table|safe }}
-{% endfor %}
+    {% endfor %}
+    </div>
+</section>
+
 </body>
 </html>

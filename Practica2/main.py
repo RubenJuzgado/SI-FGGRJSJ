@@ -6,10 +6,8 @@ from dataframes import usuariosCriticos
 from dataframes import websCriticas
 from dataframes import mas50Clickados
 from dataframes import menos50Clickados
-import urllib
 import json
 import plotly.graph_objects as go
-import matplotlib.pyplot as plt
 
 app = Flask(__name__)
 
@@ -125,7 +123,7 @@ def graficosApartado3():
 @app.route("/tenLastCVE")
 def tenLastCVE():
     df = devolverLast10CVE()
-    return render_template('tenLastCVE.html', tables=[df.to_html(classes='data')], titles=df.columns.values)
+    return render_template('tenLastCVE.html',  tables=[df.to_html(classes='data', header="true")])
 
 
 @app.route('/plotly')
