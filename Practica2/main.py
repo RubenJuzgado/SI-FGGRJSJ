@@ -136,62 +136,45 @@ def regresionLineal():
         usersClasesDatos = json.load(json_file)
     usersClasesDatos = usersClasesDatos['usuarios']
 
-    with open('static/users_IA_predecir.json') as json_file:
-        usersPredecirDatos = json.load(json_file)
-    usersPredecirDatos = usersPredecirDatos['usuarios']
-
     usersClasesTrain = []
     usersClasesTest = []
-    usersPredecirTrain = []
-    usersPredecirTest = []
     vulnerableTrain = []
     vulnerableTest = []
-    for i in range(int((len(usersClasesDatos) * 0.8))):
+    for i in range(int((len(usersClasesDatos) * 0.6))):
         vulnerableTrain.append(usersClasesDatos[i]['vulnerable'])
 
         usersClasesTrain.append(
             [usersClasesDatos[i]['emails_phishing_recibidos'], usersClasesDatos[i]['emails_phishing_clicados']])
 
-    for i in range(int((len(usersClasesDatos) * 0.8)), len(usersClasesDatos)):
+    for i in range(int((len(usersClasesDatos) * 0.6)), len(usersClasesDatos)):
         vulnerableTest.append(usersClasesDatos[i]['vulnerable'])
         usersClasesTest.append(
             [usersClasesDatos[i]['emails_phishing_recibidos'], usersClasesDatos[i]['emails_phishing_clicados']])
 
-    for i in range(int((len(usersPredecirDatos) * 0.8))):
-        usersPredecirTrain.append(
-            [usersPredecirDatos[i]['emails_phishing_recibidos'], usersPredecirDatos[i]['emails_phishing_clicados']])
-
-    for i in range(int((len(usersPredecirDatos) * 0.8)), len(usersPredecirDatos)):
-        usersPredecirTest.append(
-            [usersPredecirDatos[i]['emails_phishing_recibidos'], usersPredecirDatos[i]['emails_phishing_clicados']])
-
 
     print("UsersClasesTrain:")
     print(usersClasesTrain)
-    print("UsersPredecirTrain:")
-    print(usersPredecirTrain)
+    print("UsersClasesTest:")
+    print(usersClasesTest)
+    print("VulnerableTrain:")
+    print(vulnerableTrain)
+    print("VulnerableTest:")
+    print(vulnerableTest)
 
     regr = linear_model.LinearRegression()
-    regr.fit(usersClasesTrain, usersPredecirTrain)
+    regr.fit(usersClasesTrain, vulnerableTrain)
     print("Regr.coef_:")
     print(regr.coef_)
     usersPredecir_pred = regr.predict(usersClasesTest)
     porcentajeClickados = []
-    porcentajeClickadosv2 = []
-    coefDeter = r2_score(usersPredecirTest, usersPredecir_pred)
-    print(usersClasesTrain)
-    for i in range(len(usersClasesTrain)):
-        if usersClasesTrain[i][0] != 0:
-            data = float(usersClasesTrain[i][1]/usersClasesTrain[i][0])
-            data2 = float(data*coefDeter)
+    coefDeter = r2_score(vulnerableTest, usersPredecir_pred)
+    print(coefDeter)
+    for i in range(len(usersClasesTest)):
+        if usersClasesTest[i][0] != 0:
+            data = usersClasesTest[i][1]/usersClasesTest[i][0]
             porcentajeClickados.append(data)
-            porcentajeClickadosv2.append(data2)
         else:
             porcentajeClickados.append(0)
-
-
-    print("PorcentajeClickadosv2:")
-    print(porcentajeClickadosv2)
 
     print("PorcentajeClickados")
     print(porcentajeClickados)
@@ -199,7 +182,8 @@ def regresionLineal():
     print("regr.intercept")
     print(regr.intercept_)
 
-    plt.plot(porcentajeClickadosv2 + regr.intercept_, porcentajeClickados)
+    plt.scatter(porcentajeClickados, vulnerableTest)
+    plt.plot(np.array(porcentajeClickados) * coefDeter + regr.intercept_, porcentajeClickados)
     plt.show()
     return render_template("index.html")
 
