@@ -9,7 +9,7 @@ from dataframes import websCriticas
 from dataframes import mas50Clickados
 from dataframes import menos50Clickados
 from sklearn import datasets, linear_model
-from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.metrics import mean_squared_error, r2_score, accuracy_score
 import json
 import plotly.graph_objects as go
 
@@ -151,7 +151,6 @@ def regresionLineal():
         usersClasesTest.append(
             [usersClasesDatos[i]['emails_phishing_recibidos'], usersClasesDatos[i]['emails_phishing_clicados']])
 
-
     print("UsersClasesTrain:")
     print(usersClasesTrain)
     print("UsersClasesTest:")
@@ -171,7 +170,7 @@ def regresionLineal():
     print(coefDeter)
     for i in range(len(usersClasesTest)):
         if usersClasesTest[i][0] != 0:
-            data = usersClasesTest[i][1]/usersClasesTest[i][0]
+            data = usersClasesTest[i][1] / usersClasesTest[i][0]
             porcentajeClickados.append(data)
         else:
             porcentajeClickados.append(0)
@@ -181,7 +180,6 @@ def regresionLineal():
 
     print("regr.intercept")
     print(regr.intercept_)
-
     plt.scatter(porcentajeClickados, vulnerableTest)
     plt.plot(np.array(porcentajeClickados) * coefDeter + regr.intercept_, porcentajeClickados)
     plt.show()
