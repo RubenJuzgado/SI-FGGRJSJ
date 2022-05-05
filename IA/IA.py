@@ -21,8 +21,6 @@ def regresionLineal():
     usersClasesTest = []
     vulnerableTrain = []
     vulnerableTest = []
-    vulnerableTestPredecir = []
-    usersPredecirTest = []
     for i in range(int((len(usersClasesDatos) * 0.69))):
         vulnerableTrain.append(usersClasesDatos[i]['vulnerable'])
 
@@ -104,11 +102,15 @@ def decisionTreeClassifier():
     usersClasesTest = []
     vulnerableTrain = []
     vulnerableTest = []
-    vulnerableTestPredecir = []
-    usersPredecirTest = []
-    for i in range(len(usersClasesDatos)):
+    for i in range(int((len(usersClasesDatos) * 0.52))):
         vulnerableTrain.append(usersClasesDatos[i]['vulnerable'])
+
         usersClasesTrain.append(
+            [usersClasesDatos[i]['emails_phishing_recibidos'], usersClasesDatos[i]['emails_phishing_clicados']])
+
+    for i in range(int((len(usersClasesDatos) * 0.52)), len(usersClasesDatos)):
+        vulnerableTest.append(usersClasesDatos[i]['vulnerable'])
+        usersClasesTest.append(
             [usersClasesDatos[i]['emails_phishing_recibidos'], usersClasesDatos[i]['emails_phishing_clicados']])
 
     clf = tree.DecisionTreeClassifier()
@@ -135,18 +137,15 @@ def decisionTreeClassifier():
     print("Número de usuarios críticos: " + str(countVuln))
     print("Número de usuarios no críticos: " + str(countNoVuln))
 
-    print("La precisión es: " + str(clf.score(usersClasesTrain, vulnerableTrain)))
+    print("La precisión es: " + str(clf.score(usersClasesTest, vulnerableTest)))
 
-    dot_data = tree.export_graphviz(clf, out_file=None)
-    graph = graphviz.Source(dot_data)
-    graph.render("Usuarios_Criticos")
     dot_data = tree.export_graphviz(clf, out_file=None,
                                     feature_names=['emails_phishing_recibidos', 'emails_phishing_clicados'],
                                     class_names=['vulnerable', 'no vulnerable'],
                                     filled=True, rounded=True,
                                     special_characters=True)
     graph = graphviz.Source(dot_data)
-    graph.render('test.gv', view=True).replace('\\', '/')
+    graph.render('Usuarios_Criticos.gv', view=True).replace('\\', '/')
 
 
 def randomForest():
