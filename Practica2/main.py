@@ -8,12 +8,37 @@ from dataframes import usuariosCriticos
 from dataframes import websCriticas
 from dataframes import mas50Clickados
 from dataframes import menos50Clickados
-from sklearn import datasets, linear_model
-from sklearn.metrics import mean_squared_error, r2_score, accuracy_score
+from sklearn import tree
 import json
 import plotly.graph_objects as go
 
 app = Flask(__name__)
+
+
+def decisionTreeClassifier():
+    with open('static/users_IA_clases.json') as json_file:
+        usersClasesDatos = json.load(json_file)
+    usersClasesDatos = usersClasesDatos['usuarios']
+
+    usersClasesTrain = []
+    usersClasesTest = []
+    vulnerableTrain = []
+    vulnerableTest = []
+
+    for i in range(int((len(usersClasesDatos) * 0.52))):
+        vulnerableTrain.append(usersClasesDatos[i]['vulnerable'])
+
+        usersClasesTrain.append(
+            [usersClasesDatos[i]['emails_phishing_recibidos'], usersClasesDatos[i]['emails_phishing_clicados']])
+
+    for i in range(int((len(usersClasesDatos) * 0.52)), len(usersClasesDatos)):
+        vulnerableTest.append(usersClasesDatos[i]['vulnerable'])
+        usersClasesTest.append(
+            [usersClasesDatos[i]['emails_phishing_recibidos'], usersClasesDatos[i]['emails_phishing_clicados']])
+
+    clf = tree.DecisionTreeClassifier()
+    clf = clf.fit(usersClasesTrain, vulnerableTrain)
+    return clf
 
 
 def devolverJSONUsuariosCriticos(numeroU):
@@ -130,83 +155,22 @@ def tenLastCVE():
     return render_template('tenLastCVE.html', tables=[df.to_html(classes='data', header="true")])
 
 
-@app.route("/regresionLineal")
-def regresionLineal():
-    with open('static/users_IA_clases.json') as json_file:
-        usersClasesDatos = json.load(json_file)
-    usersClasesDatos = usersClasesDatos['usuarios']
-
-    usersClasesTrain = []
-    usersClasesTest = []
-    vulnerableTrain = []
-    vulnerableTest = []
-    for i in range(int((len(usersClasesDatos) * 0.6))):
-        vulnerableTrain.append(usersClasesDatos[i]['vulnerable'])
-
-        usersClasesTrain.append(
-            [usersClasesDatos[i]['emails_phishing_recibidos'], usersClasesDatos[i]['emails_phishing_clicados']])
-
-    for i in range(int((len(usersClasesDatos) * 0.6)), len(usersClasesDatos)):
-        vulnerableTest.append(usersClasesDatos[i]['vulnerable'])
-        usersClasesTest.append(
-            [usersClasesDatos[i]['emails_phishing_recibidos'], usersClasesDatos[i]['emails_phishing_clicados']])
-
-    print("UsersClasesTrain:")
-    print(usersClasesTrain)
-    print("UsersClasesTest:")
-    print(usersClasesTest)
-    print("VulnerableTrain:")
-    print(vulnerableTrain)
-    print("VulnerableTest:")
-    print(vulnerableTest)
-
-    regr = linear_model.LinearRegression()
-    regr.fit(usersClasesTrain, vulnerableTrain)
-    print("Regr.coef_:")
-    print(regr.coef_)
-    usersPredecir_pred = regr.predict(usersClasesTest)
-    porcentajeClickados = []
-    coefDeter = r2_score(vulnerableTest, usersPredecir_pred)
-    print(coefDeter)
-    for i in range(len(usersClasesTest)):
-        if usersClasesTest[i][0] != 0:
-            data = usersClasesTest[i][1] / usersClasesTest[i][0]
-            porcentajeClickados.append(data)
-        else:
-            porcentajeClickados.append(0)
-
-    print("PorcentajeClickados")
-    print(porcentajeClickados)
-
-    print("regr.intercept")
-    print(regr.intercept_)
-    plt.scatter(porcentajeClickados, vulnerableTest)
-    plt.plot(np.array(porcentajeClickados) * coefDeter + regr.intercept_, porcentajeClickados)
-    plt.show()
-    return render_template("index.html")
+@app.route("/predecir")
+def predecir():
+    return render_template("formUserVuln.html")
 
 
-@app.route("/decisionTree")
-def decisionTree():
-    return
-
-
-@app.route("/randomForest")
-def randomForest():
-    return
-
-
-@app.route('/plotly')
-def plotly():
-    fig = go.Figure(
-        data=[go.Bar(y=[2, 1, 3])],
-        layout_title_text="Figura"
-    )
-    # fig.show()
-    import plotly
-    a = plotly.utils.PlotlyJSONEncoder
-    graphJSON = json.dumps(fig, cls=a)
-    return render_template('hello.html', graphJSON=graphJSON)
+@app.route("/predecirUserVuln", methods=["GET", "POST"])
+def predecirUserVuln():
+    clf = decisionTreeClassifier()
+    emailsRecibidos = int(request.form["emailsR"])
+    emailsClickados = int(request.form["emailsC"])
+    nombre = str(request.form["nombre"])
+    prediccion = clf.predict([[emailsRecibidos, emailsClickados]])
+    if prediccion[0] == 0:
+        return render_template("vulnerable.html", nombre=nombre, novuln=1)
+    else:
+        return render_template("vulnerable.html", nombre=nombre, vuln=1)
 
 
 if __name__ == '__main__':

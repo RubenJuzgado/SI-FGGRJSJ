@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<p>
+    {% if vuln %}
+        El usuario {{ nombre }} es vulnerable
+    {% endif %}
+    {% if novuln %}
+        El usuario {{ nombre }} no es vulnerable
+    {% endif %}
+</p>
+
+<p><a href="/">Volver al menú de inicio</a></p>
+</body>
+</html>

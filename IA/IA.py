@@ -101,6 +101,7 @@ def regresionLineal():
     print("Usuarios vulnerables: " + str(contVuln))
     print("Usuarios NO vulnerables: " + str(contNoVuln))
     print("El accuracy es de:" + str(accuracy2))
+
     return
 
 

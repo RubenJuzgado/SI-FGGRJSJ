@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="/predecirUserVuln" method="post">
+    <p>
+        Introduce el numero de emails que recibió el usuario:
+        <input type="number" name="emailsR" id="emailsR" min="0" value="0" required>
+    </p>
+    <p>
+        Introduce el numero de emails que clickó el usuario:
+        <input type="number" name="emailsC" id="emailsC" min="0" value="0" required>
+    </p>
+    <p>
+        Introduce el nombre del usuario:
+        <input type="text" name="nombre" id="nombre" required>
+    </p>
+    <input type="submit" value="¿Es vulnerable?">
+</form>
+</body>
+</html>
