@@ -98,6 +98,10 @@ def devolverLast10CVE():
     df = df.head(10)
     return df
 
+def devolverTopMicrosoftVulnerabilidades():
+    df = pd.read_json("https://cve.circl.lu/api/browse/microsoft")
+    return df
+
 
 @app.route('/')
 def indice():
@@ -153,6 +157,12 @@ def graficosApartado3():
 def tenLastCVE():
     df = devolverLast10CVE()
     return render_template('tenLastCVE.html', tables=[df.to_html(classes='data', header="true")])
+
+
+@app.route("/TopMicrosoftVulnerabilidades")
+def TopMicrosoftVulnerabilidades():
+    df = devolverTopMicrosoftVulnerabilidades()
+    return render_template('TopMicrosoftVulnerabilidades.html', tables=[df.to_html(classes='data', header="true")])
 
 
 @app.route("/predecir")

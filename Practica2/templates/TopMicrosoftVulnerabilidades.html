@@ -1,0 +1,23 @@
+       <!DOCTYPE html>
+<html lang="en">
+<head>
+    <style type="text/css">
+        th{
+            text-align: center;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <title>10 </title>
+</head>
+<body>
+<section>
+    <div>
+    <h1>10 Microsoft Vulnerabilities</h1>
+    {% for table in tables %}
+            {{ table|safe }}
+    {% endfor %}
+    </div>
+</section>
+
+</body>
+</html>
