@@ -1,9 +1,10 @@
-import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
-from flask import Flask
+from flask import Flask, redirect, url_for
 from flask import render_template
 from flask import request
+from flask_login import LoginManager, current_user, login_user, logout_user
+from werkzeug.urls import url_parse
+
 from dataframes import usuariosCriticos
 from dataframes import websCriticas
 from dataframes import mas50Clickados
@@ -12,7 +13,13 @@ from sklearn import tree
 import json
 import plotly.graph_objects as go
 
+from forms import LoginForm, SignupForm
+from models import users, get_user, User
+
 app = Flask(__name__)
+app.config['SECRET_KEY'] = '7110c8ae51a4b5af97be6534caef90e4bb9bdcb3380af008f90b23a5d1616bf319bc298177da20fe'
+login_manager = LoginManager(app)
+login_manager.login_view = "login"
 
 
 def decisionTreeClassifier():
@@ -82,7 +89,7 @@ def devolverJSONSeleccion(seleccion):
         return seleccionJSON
     elif seleccion == "menos50":
         dfM50 = menos50Clickados()
-        traceW = go.Bar(x=dfM50['nombreu'], y=dfM50['porcentajeSpamClick'])
+        traceW = go.Bar(x=dfM50['nombre'], y=dfM50['porcentajeSpamClick'])
         layoutW = go.Layout(title="Usuarios que clickan 50% de spam o menos", xaxis=dict(title="Usuarios"),
                             yaxis=dict(title="Porcentaje clicks"))
         dataW = [traceW]
@@ -98,13 +105,15 @@ def devolverLast10CVE():
     df = df.head(10)
     return df
 
+
 def devolverTopMicrosoftVulnerabilidades():
     df = pd.read_json("https://cve.circl.lu/api/browse/microsoft")
+    df = df.head(101)
     return df
 
 
 @app.route('/')
-def indice():
+def index():
     return render_template("index.html")
 
 
@@ -183,5 +192,58 @@ def predecirUserVuln():
         return render_template("vulnerable.html", nombre=nombre, vuln=1)
 
 
+@app.route("/registro", methods=["GET", "POST"])
+def show_signup_form():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = SignupForm()
+    if form.validate_on_submit():
+        name = form.name.data
+        email = form.email.data
+        password = form.password.data
+        # Creamos el usuario y lo guardamos
+        user = User(len(users) + 1, name, email, password)
+        users.append(user)
+        # Dejamos al usuario logueado
+        login_user(user, remember=True)
+        next_page = request.args.get('next', None)
+        if not next_page or url_parse(next_page).netloc != '':
+            next_page = url_for('index')
+        return redirect(next_page)
+    return render_template("registro.html", form=form)
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    for user in users:
+        if user.id == int(user_id):
+            return user
+    return None
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = get_user(form.email.data)
+        if user is not None and user.check_password(form.password.data):
+            login_user(user, remember=form.remember_me.data)
+            next_page = request.args.get('next')
+            if not next_page or url_parse(next_page).netloc != '':
+                next_page = url_for('index')
+            return redirect(next_page)
+    return render_template('login.html', form=form)
+
+
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+

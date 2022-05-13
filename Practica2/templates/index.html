@@ -5,10 +5,13 @@
     <title>Title</title>
 </head>
 <body>
-<a href="/formApartado2">Apartado 2</a><br>
-<a href="/formApartado3">Apartado 3</a><br>
-<a href="/tenLastCVE">Apartado 4</a><br>
-<a href="/TopMicrosoftVulnerabilidades">Apartado 5 -> Top Microsoft Vulnerabilities</a><br>
-<a href="/predecir">¿Es cierto usuario vulnerable?</a><br>
+{% extends "base_template.html" %}
+{% block content %}
+    <a href="/formApartado2">Apartado 2</a><br>
+    <a href="/formApartado3">Apartado 3</a><br>
+    <a href="/tenLastCVE">Apartado 4</a><br>
+    <a href="/TopMicrosoftVulnerabilidades">Apartado 5 -> Top Microsoft Vulnerabilities</a><br>
+    <a href="/predecir">¿Es cierto usuario vulnerable?</a><br>
+{% endblock %}
 </body>
 </html>
