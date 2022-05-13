@@ -101,7 +101,6 @@ def regresionLineal():
     print("Usuarios vulnerables: " + str(contVuln))
     print("Usuarios NO vulnerables: " + str(contNoVuln))
     print("El accuracy es de:" + str(accuracy2))
-
     return
 
 
@@ -137,8 +136,8 @@ def decisionTreeClassifier():
 
     clf = tree.DecisionTreeClassifier()
     clf = clf.fit(usersClasesTrain, vulnerableTrain)
-    # Predict
 
+    # Predict
     predicted = clf.predict(usersPredecir)
     countVuln = 0
     countNoVuln = 0
@@ -218,8 +217,6 @@ def randomForest():
     print("Número de usuarios no críticos: " + str(countNoVuln))
 
     print("La precisión es: " + str(clf.score(usersClasesTest, vulnerableTest)))
-
-
     return
 
 

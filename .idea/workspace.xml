@@ -4,7 +4,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3a66b2d3-e88d-4405-8a46-8151eeff1e2a" name="Changes" comment="" />
+    <list default="true" id="3a66b2d3-e88d-4405-8a46-8151eeff1e2a" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/IA/IA.py" beforeDir="false" afterPath="$PROJECT_DIR$/IA/IA.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Practica2/SQLite.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Practica2/templates/TopMicrosoftVulnerabilidades.html" beforeDir="false" afterPath="$PROJECT_DIR$/Practica2/templates/TopMicrosoftVulnerabilidades.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Practica2/templates/base_template.html" beforeDir="false" afterPath="$PROJECT_DIR$/Practica2/templates/base_template.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Practica2/templates/formApartado2.html" beforeDir="false" afterPath="$PROJECT_DIR$/Practica2/templates/formApartado2.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Practica2/templates/formApartado3.html" beforeDir="false" afterPath="$PROJECT_DIR$/Practica2/templates/formApartado3.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Practica2/templates/formUserVuln.html" beforeDir="false" afterPath="$PROJECT_DIR$/Practica2/templates/formUserVuln.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Practica2/templates/graficosApartado3.html" beforeDir="false" afterPath="$PROJECT_DIR$/Practica2/templates/graficosApartado3.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Practica2/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/Practica2/templates/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Practica2/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/Practica2/templates/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Practica2/templates/registro.html" beforeDir="false" afterPath="$PROJECT_DIR$/Practica2/templates/registro.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Practica2/templates/tenLastCVE.html" beforeDir="false" afterPath="$PROJECT_DIR$/Practica2/templates/tenLastCVE.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Practica2/templates/vulnerable.html" beforeDir="false" afterPath="$PROJECT_DIR$/Practica2/templates/vulnerable.html" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -26,14 +41,39 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "D:/OneDrive/Documentos/GitHub/SI-FGGRJSJ",
+    "last_opened_file_path": "D:/OneDrive/Documentos/GitHub/adminator",
     "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.stylelint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)"
+    "node.js.selected.package.stylelint": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
 }]]></component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.main">
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="SI-FGGRJSJ" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Practica2" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Practica2/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="Flask" type="Python.FlaskServer" nameIsGenerated="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -47,6 +87,11 @@
       <option name="launchJavascriptDebuger" value="false" />
       <method v="2" />
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.main" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -56,7 +101,10 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1652364278609</updated>
-      <workItem from="1652364279959" duration="3022000" />
+      <workItem from="1652364279959" duration="3083000" />
+      <workItem from="1652367412807" duration="351000" />
+      <workItem from="1652368228003" duration="1327000" />
+      <workItem from="1652456234075" duration="4675000" />
     </task>
     <servers />
   </component>
@@ -75,6 +123,6 @@
     </option>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/SI_FGGRJSJ$main.coverage" NAME="main Coverage Results" MODIFIED="1652366694940" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Practica2" />
+    <SUITE FILE_PATH="coverage/SI_FGGRJSJ$main.coverage" NAME="main Coverage Results" MODIFIED="1652460897598" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Practica2" />
   </component>
 </project>
